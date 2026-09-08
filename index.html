@@ -2,12 +2,11 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>EFE'NIN GIZEMLI GECESI</title>
+<title>Efe'nin Son Kapısı</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 * {
     box-sizing: border-box;
@@ -19,9 +18,8 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: #020000;
-    color: white;
-    font-family: 'Press Start 2P', monospace;
+    background: #050509;
+    font-family: "Courier New", monospace;
 }
 
 body {
@@ -29,7 +27,7 @@ body {
 }
 
 /* =========================
-   GENEL
+   ANA EKRAN
 ========================= */
 
 .screen {
@@ -40,29 +38,10 @@ body {
     justify-content: center;
     flex-direction: column;
     text-align: center;
-    padding: 20px;
 }
 
 .screen.active {
     display: flex;
-}
-
-/* Karanlık film efekti */
-
-.screen::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 200;
-    background:
-        repeating-linear-gradient(
-            0deg,
-            rgba(255,255,255,.025) 0px,
-            rgba(255,255,255,.025) 1px,
-            transparent 1px,
-            transparent 4px
-        );
 }
 
 /* =========================
@@ -71,21 +50,24 @@ body {
 
 #start {
     background:
-        radial-gradient(
-            circle,
-            #3b0000 0%,
-            #140000 35%,
-            #050000 70%,
-            #000 100%
-        );
+        radial-gradient(circle at center,
+        #3c0909 0%,
+        #170505 35%,
+        #050505 75%,
+        #000 100%);
+    color: white;
 }
 
-.title {
-    color: #c40000;
-    font-size: clamp(28px, 10vw, 65px);
+.startTitle {
+    font-size: clamp(40px, 12vw, 85px);
+    color: #b40000;
+    font-weight: bold;
+    letter-spacing: 10px;
+
     text-shadow:
-        5px 5px #280000,
-        0 0 30px #900000;
+        4px 4px 0 #160000,
+        0 0 25px #900000;
+
     animation: titlePulse 2s infinite alternate;
 }
 
@@ -93,42 +75,44 @@ body {
     from {
         opacity: .65;
     }
+
     to {
         opacity: 1;
     }
 }
 
-.story {
-    max-width: 650px;
-    margin-top: 25px;
+.startText {
+    width: min(90%, 600px);
     color: #aaa;
-    font-size: 9px;
-    line-height: 2.3;
+    font-size: 14px;
+    line-height: 2;
+    margin: 25px 0;
 }
 
 .startButton,
-.answer,
-.continueButton,
+.answerButton,
+.nextButton,
 .yesButton {
-    font-family: inherit;
+    border: 2px solid #850000;
+    background: #160404;
     color: white;
-    background: #100000;
-    border: 3px solid #750000;
-    padding: 17px;
-    font-size: 9px;
+    padding: 16px 25px;
+    font-family: inherit;
+    font-weight: bold;
     cursor: pointer;
+
+    box-shadow:
+        0 0 15px rgba(150,0,0,.3);
 }
 
-.startButton {
-    margin-top: 30px;
+.startButton:hover,
+.answerButton:hover,
+.nextButton:hover {
+    background: #700000;
 }
 
 button:active {
-    transform: scale(.95);
-}
-
-button:hover {
-    background: #5e0000;
+    transform: scale(.94);
 }
 
 /* =========================
@@ -136,177 +120,47 @@ button:hover {
 ========================= */
 
 #game {
-    background: #020000;
+    background: #000;
 }
 
-.game {
+.gameArea {
     position: relative;
-    width: min(95vw, 900px);
-    height: min(70vh, 520px);
+
+    width: 100vw;
+    height: 100vh;
+
     overflow: hidden;
-    border: 5px solid #300000;
-    background: #090303;
-    box-shadow:
-        0 0 50px #300000,
-        inset 0 0 80px #000;
-}
 
-/* Duvar */
-
-.wall {
-    position: absolute;
-    inset: 0 0 30% 0;
-
-    background:
+    background-image:
         linear-gradient(
-            rgba(80,0,0,.2),
-            rgba(0,0,0,.6)
+            rgba(0,0,0,.15),
+            rgba(0,0,0,.45)
         ),
-        repeating-linear-gradient(
-            90deg,
-            #171010 0px,
-            #171010 70px,
-            #100909 71px,
-            #100909 140px
-        );
+        url("oda1.jpg");
+
+    background-size: cover;
+    background-position: center;
 }
 
-/* Zemin */
+/* karanlık kenarlar */
 
-.floor {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 30%;
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            #1a1111 0px,
-            #1a1111 55px,
-            #0d0808 56px,
-            #0d0808 110px
-        );
-}
-
-/* Kan lekeleri */
-
-.blood {
-    position: absolute;
-    background: #790000;
-    box-shadow: 0 0 8px #300000;
-}
-
-.blood1 {
-    width: 60px;
-    height: 18px;
-    left: 8%;
-    top: 30%;
-    transform: rotate(17deg);
-}
-
-.blood2 {
-    width: 25px;
-    height: 50px;
-    left: 22%;
-    top: 48%;
-    transform: rotate(-20deg);
-}
-
-.blood3 {
-    width: 90px;
-    height: 14px;
-    right: 9%;
-    top: 39%;
-    transform: rotate(-12deg);
-}
-
-.blood4 {
-    width: 35px;
-    height: 22px;
-    right: 30%;
-    bottom: 18%;
-    border-radius: 50%;
-}
-
-/* küçük kan damlaları */
-
-.drop {
-    position: absolute;
-    width: 6px;
-    height: 12px;
-    background: #a00000;
-    border-radius: 50%;
-}
-
-.drop1 { left: 30%; top: 45%; }
-.drop2 { left: 33%; top: 52%; }
-.drop3 { right: 20%; top: 55%; }
-.drop4 { right: 24%; top: 48%; }
-
-/* Tavan lambası */
-
-.ceilingLight {
-    position: absolute;
-    top: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 75px;
-    height: 8px;
-    background: #777;
-
-    box-shadow:
-        0 0 25px #aaa,
-        0 0 70px rgba(255,0,0,.25);
-}
-
-/* Tek kapı */
-
-.door {
-    position: absolute;
-    width: 105px;
-    height: 205px;
-    left: 50%;
-    bottom: 30%;
-    transform: translateX(-50%);
-
-    background:
-        linear-gradient(
-            90deg,
-            #180807,
-            #32110d,
-            #150605
-        );
-
-    border: 8px solid #401510;
-
-    box-shadow:
-        inset 0 0 30px #000,
-        0 0 15px #300000;
-}
-
-.door::after {
+.gameArea::after {
     content: "";
-    position: absolute;
-    right: 12px;
-    top: 105px;
-    width: 10px;
-    height: 10px;
-    background: #b57b20;
-}
 
-/* Kapıdaki kan */
-
-.doorBlood {
     position: absolute;
-    width: 13px;
-    height: 80px;
-    background: #790000;
-    top: 20px;
-    left: 20px;
-    transform: rotate(9deg);
-    opacity: .75;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 35%,
+            rgba(0,0,0,.35) 65%,
+            rgba(0,0,0,.85) 100%
+        );
+
+    z-index: 5;
 }
 
 /* =========================
@@ -315,161 +169,169 @@ button:hover {
 
 .flashlight {
     position: absolute;
-    left: 48%;
-    bottom: 42%;
-    width: 120px;
-    height: 120px;
+
+    left: 50%;
+    top: 45%;
+
+    width: 500px;
+    height: 500px;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
 
     background:
         radial-gradient(
             circle,
-            rgba(255,255,220,.25),
-            rgba(255,255,220,.06) 35%,
+            rgba(255,245,190,.20) 0%,
+            rgba(255,245,190,.08) 25%,
+            rgba(255,245,190,.025) 45%,
             transparent 70%
         );
 
+    z-index: 6;
+
     pointer-events: none;
-    z-index: 4;
+
+    animation: flashlightMove 2s infinite alternate;
+}
+
+@keyframes flashlightMove {
+
+    from {
+        transform:
+            translate(-50%, -50%)
+            scale(.95);
+    }
+
+    to {
+        transform:
+            translate(-50%, -50%)
+            scale(1.05);
+    }
+
 }
 
 /* =========================
-   EFE
+   EFE KARAKTERİ
 ========================= */
 
 .player {
+
     position: absolute;
-    width: 42px;
-    height: 72px;
-    bottom: 29%;
+
+    width: 90px;
+    height: 120px;
+
     left: 12%;
+    bottom: 12%;
+
     z-index: 20;
 
-    transition: left .15s linear;
+    transition: left .2s ease;
+
 }
 
-/* Kafa */
+.player img {
 
-.head {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    image-rendering: pixelated;
+
+    filter:
+        drop-shadow(0 5px 3px rgba(0,0,0,.7));
+}
+
+/* =========================
+   FENERİN ELDE GÖRÜNMESİ
+========================= */
+
+.handLight {
+
     position: absolute;
-    top: 0;
-    left: 6px;
-    width: 30px;
-    height: 27px;
-    background: #c99070;
-    border: 3px solid #090909;
+
+    width: 35px;
+    height: 12px;
+
+    right: -15px;
+    top: 54px;
+
+    background: #555;
+
+    border: 2px solid #222;
+
+    transform: rotate(-10deg);
+
 }
 
-/* Siyah saç */
+.handLight::after {
 
-.hair {
-    position: absolute;
-    left: -3px;
-    top: -6px;
-    width: 36px;
-    height: 15px;
-    background: #030303;
-}
-
-/* Gözler */
-
-.eye {
-    position: absolute;
-    top: 12px;
-    width: 4px;
-    height: 4px;
-    background: #111;
-}
-
-.eye.left {
-    left: 6px;
-}
-
-.eye.right {
-    right: 6px;
-}
-
-/* Yeşil tişört */
-
-.shirt {
-    position: absolute;
-    top: 27px;
-    left: 2px;
-    width: 36px;
-    height: 25px;
-    background: #176b32;
-    border: 3px solid #073516;
-}
-
-/* Kollar */
-
-.arm {
-    position: absolute;
-    top: 29px;
-    width: 8px;
-    height: 21px;
-    background: #176b32;
-}
-
-.arm.left {
-    left: -5px;
-}
-
-.arm.right {
-    right: -5px;
-}
-
-/* Gri pantolon */
-
-.pants {
-    position: absolute;
-    top: 52px;
-    left: 6px;
-    width: 28px;
-    height: 17px;
-    background: #777;
-    border-left: 4px solid #555;
-    border-right: 4px solid #555;
-}
-
-/* Siyah spor ayakkabı */
-
-.shoe {
-    position: absolute;
-    bottom: -5px;
-    width: 17px;
-    height: 8px;
-    background: #030303;
-}
-
-.shoe.left {
-    left: 3px;
-}
-
-.shoe.right {
-    right: 3px;
-}
-
-/* Elde fener */
-
-.handFlashlight {
-    position: absolute;
-    width: 18px;
-    height: 7px;
-    right: -19px;
-    top: 35px;
-    background: #222;
-    border: 2px solid #555;
-}
-
-.handFlashlight::after {
     content: "";
+
     position: absolute;
-    right: -9px;
-    top: -3px;
-    width: 9px;
-    height: 10px;
+
+    right: -12px;
+    top: -5px;
+
+    width: 12px;
+    height: 20px;
+
     background: #ddd;
-    box-shadow: 0 0 15px #fff;
+
+    box-shadow:
+        0 0 15px #fff,
+        0 0 30px rgba(255,255,200,.7);
+
+}
+
+/* =========================
+   KANLAR
+========================= */
+
+.blood {
+
+    position: absolute;
+
+    z-index: 10;
+
+    background: #650000;
+
+    box-shadow:
+        0 0 10px rgba(120,0,0,.5);
+
+}
+
+.blood.one {
+    width: 90px;
+    height: 17px;
+
+    left: 20%;
+    top: 40%;
+
+    transform: rotate(-13deg);
+}
+
+.blood.two {
+    width: 35px;
+    height: 75px;
+
+    right: 18%;
+    top: 30%;
+
+    transform: rotate(18deg);
+}
+
+.blood.three {
+    width: 70px;
+    height: 13px;
+
+    left: 42%;
+    bottom: 20%;
+
+    transform: rotate(8deg);
 }
 
 /* =========================
@@ -477,57 +339,73 @@ button:hover {
 ========================= */
 
 .ghost {
-    position: absolute;
-    width: 48px;
-    height: 66px;
-    right: -70px;
-    bottom: 30%;
 
-    background: rgba(210,210,210,.86);
+    position: absolute;
+
+    width: 75px;
+    height: 105px;
+
+    right: -100px;
+    bottom: 15%;
+
+    z-index: 30;
+
+    background:
+        linear-gradient(
+            rgba(220,220,220,.9),
+            rgba(120,120,120,.65)
+        );
 
     border-radius:
-        25px 25px 5px 5px;
-
-    z-index: 50;
+        50px 50px 15px 15px;
 
     animation:
-        ghostAttack 2.7s linear forwards;
+        ghostMove 3s linear forwards;
 
-    box-shadow:
-        0 0 25px rgba(255,255,255,.25);
+    filter:
+        drop-shadow(0 0 15px rgba(255,255,255,.2));
+
 }
 
 .ghost::before {
+
     content: "";
+
     position: absolute;
-    top: 19px;
-    left: 9px;
 
-    width: 7px;
-    height: 11px;
+    left: 16px;
+    top: 30px;
 
-    background: #050505;
+    width: 10px;
+    height: 15px;
+
+    background: black;
 
     box-shadow:
-        23px 0 #050505;
+        33px 0 black;
+
 }
 
 .ghost::after {
+
     content: "";
+
     position: absolute;
-    bottom: 11px;
-    left: 15px;
 
-    width: 19px;
-    height: 9px;
+    left: 25px;
+    top: 62px;
 
-    background: #080808;
+    width: 25px;
+    height: 13px;
+
+    background: black;
+
 }
 
-@keyframes ghostAttack {
+@keyframes ghostMove {
 
     0% {
-        right: -70px;
+        right: -100px;
         opacity: 0;
     }
 
@@ -536,14 +414,14 @@ button:hover {
     }
 
     70% {
-        right: 40%;
-        opacity: 1;
+        right: 35%;
     }
 
     100% {
-        right: 40%;
+        right: 35%;
         opacity: 0;
     }
+
 }
 
 /* =========================
@@ -551,11 +429,28 @@ button:hover {
 ========================= */
 
 .info {
-    min-height: 38px;
-    margin-top: 12px;
-    color: #999;
-    font-size: 8px;
-    line-height: 1.9;
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 30px;
+
+    transform: translateX(-50%);
+
+    z-index: 50;
+
+    color: white;
+
+    background:
+        rgba(0,0,0,.75);
+
+    border:
+        2px solid #600000;
+
+    padding: 12px 18px;
+
+    font-size: 13px;
+
 }
 
 /* =========================
@@ -563,87 +458,130 @@ button:hover {
 ========================= */
 
 .controls {
+
+    position: absolute;
+
+    bottom: 75px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    z-index: 60;
+
     display: flex;
-    gap: 10px;
-    margin-top: 10px;
+
+    gap: 12px;
+
 }
 
 .control {
-    width: 65px;
+
+    width: 60px;
     height: 50px;
-    padding: 0;
-    font-size: 17px;
+
+    border:
+        2px solid #650000;
+
+    background:
+        rgba(10,0,0,.85);
+
+    color: white;
+
+    font-size: 20px;
+
 }
 
 /* =========================
-   SORU
+   SORU EKRANI
 ========================= */
 
 #question {
+
     background:
         radial-gradient(
             circle,
-            #350000,
-            #0b0000 55%,
-            #000
+            #3b0000,
+            #110000 45%,
+            #000 100%
         );
+
+    color: white;
+
 }
 
 .questionBox {
-    width: min(93vw, 650px);
-    padding: 25px;
+
+    width: min(90%, 650px);
+
+    padding: 30px;
 
     background:
-        linear-gradient(
-            rgba(30,0,0,.96),
-            rgba(8,0,0,.98)
-        );
+        rgba(10,0,0,.94);
 
-    border: 4px solid #650000;
+    border:
+        3px solid #780000;
 
     box-shadow:
-        0 0 35px #350000;
+        0 0 40px #3b0000;
+
 }
 
-.questionTitle {
+.questionRoom {
+
     color: #a00000;
-    font-size: 8px;
-    margin-bottom: 25px;
+
+    font-weight: bold;
+
+    margin-bottom: 20px;
+
 }
 
 .questionText {
-    color: #eee;
-    font-size: 11px;
-    line-height: 2;
+
+    font-size: 18px;
+
+    line-height: 1.8;
+
     margin-bottom: 25px;
+
 }
 
 .answers {
+
     display: flex;
+
     flex-direction: column;
-    gap: 10px;
+
+    gap: 12px;
+
 }
 
-.answer {
+.answerButton {
+
     width: 100%;
+
     text-align: left;
+
 }
 
-.wrong {
-    animation: shake .3s;
-    background: #260000 !important;
-    border-color: #d00000 !important;
+.answerButton.wrong {
+
+    background: #870000;
+
+    animation:
+        shake .35s;
+
 }
 
 @keyframes shake {
 
     0% { transform: translateX(0); }
 
-    25% { transform: translateX(-10px); }
+    25% { transform: translateX(-12px); }
 
-    50% { transform: translateX(10px); }
+    50% { transform: translateX(12px); }
 
-    75% { transform: translateX(-10px); }
+    75% { transform: translateX(-12px); }
 
     100% { transform: translateX(0); }
 
@@ -654,24 +592,32 @@ button:hover {
 ========================= */
 
 #keyScreen {
+
     background:
         radial-gradient(
             circle,
-            #281d00,
-            #050505 65%
+            #241500,
+            #050505 70%
         );
+
+    color: white;
+
 }
 
-.key {
-    font-size: 80px;
-    animation: keyGlow 1s infinite alternate;
+.bigKey {
+
+    font-size: 100px;
+
+    animation:
+        keyGlow 1s infinite alternate;
+
 }
 
 @keyframes keyGlow {
 
     from {
         transform: scale(1);
-        filter: brightness(.7);
+        filter: brightness(.8);
     }
 
     to {
@@ -686,39 +632,39 @@ button:hover {
 ========================= */
 
 #finalDoor {
+
     background:
         radial-gradient(
             circle,
-            #380000,
-            #050000 65%,
-            #000
+            #350000,
+            #070000 70%
         );
+
+    color: white;
+
 }
 
-.finalDoorVisual {
-    width: 145px;
-    height: 265px;
+.finalDoor {
+
+    width: 160px;
+    height: 280px;
 
     background:
         linear-gradient(
             90deg,
-            #160504,
-            #3a100c,
-            #160504
+            #120303,
+            #42100d,
+            #120303
         );
 
-    border: 10px solid #4b1711;
+    border:
+        10px solid #55150f;
 
     box-shadow:
-        0 0 40px #600000;
+        0 0 60px #700000;
 
-    margin-bottom: 25px;
-}
+    margin-bottom: 30px;
 
-.finalDoorText {
-    color: #aaa;
-    font-size: 9px;
-    line-height: 2;
 }
 
 /* =========================
@@ -726,31 +672,54 @@ button:hover {
 ========================= */
 
 #proposal {
+
     background:
         radial-gradient(
             circle,
-            #5a0000,
+            #590000,
             #170000 50%,
-            #000
+            #000 100%
         );
+
+    color: white;
+
 }
 
-.proposal {
-    font-size: clamp(15px, 5vw, 30px);
-    line-height: 2.1;
-    text-shadow: 4px 4px #350000;
+.proposalText {
+
+    width: 90%;
+
+    font-size:
+        clamp(17px, 5vw, 30px);
+
+    line-height: 2;
+
 }
 
-.red {
-    color: #ff2222;
+.proposalText span {
+
+    color: #ff2525;
+
+    text-shadow:
+        0 0 20px #900000;
+
 }
 
 .yesButton {
+
     margin-top: 30px;
-    padding: 20px 35px;
-    background: #a00000;
-    border-color: #ff4444;
-    font-size: 13px;
+
+    font-size: 18px;
+
+    padding:
+        20px 45px;
+
+    background:
+        #8e0000;
+
+    border-color:
+        #ff3333;
+
 }
 
 /* =========================
@@ -758,35 +727,53 @@ button:hover {
 ========================= */
 
 #happy {
+
     background:
         radial-gradient(
             circle,
-            #560000,
-            #150000 60%,
+            #5a0000,
+            #160000 60%,
             #000
         );
+
+    color: white;
+
 }
 
-.happy {
-    font-size: clamp(12px, 4vw, 23px);
+.happyText {
+
+    width: 90%;
+
+    font-size:
+        clamp(16px, 4vw, 27px);
+
     line-height: 2.2;
+
 }
 
 .heart {
+
     position: fixed;
+
     top: -50px;
-    z-index: 500;
-    animation: heartFall 4s linear forwards;
+
+    z-index: 100;
+
+    animation:
+        heartFall 4s linear forwards;
+
 }
 
 @keyframes heartFall {
 
     to {
+
         transform:
             translateY(110vh)
             rotate(360deg);
 
         opacity: 0;
+
     }
 
 }
@@ -795,29 +782,44 @@ button:hover {
    MOBİL
 ========================= */
 
-@media (max-width: 500px) {
+@media(max-width:600px) {
 
-    .game {
-        height: 58vh;
-    }
+    .player {
 
-    .questionBox {
-        padding: 18px;
+        width: 65px;
+        height: 90px;
+
+        bottom: 14%;
+
     }
 
     .questionText {
-        font-size: 9px;
+
+        font-size: 14px;
+
     }
 
-    .answer {
-        font-size: 8px;
-        padding: 13px;
+    .answerButton {
+
+        font-size: 12px;
+
+        padding: 14px;
+
+    }
+
+    .info {
+
+        font-size: 10px;
+
+        width: 90%;
+
     }
 
 }
 
 </style>
 </head>
+
 
 <body>
 
@@ -828,43 +830,55 @@ button:hover {
 
 <section id="start" class="screen active">
 
-    <div class="title">
+    <div class="startTitle">
         EFE
     </div>
 
-    <div class="story">
+    <div class="startText">
 
-        Gece yarısıydı...
+        Gece çoktan çökmüştü...
 
         <br><br>
 
         Efe gözlerini açtığında
-        kendisini karanlık bir evin
+        kendisini gizemli bir kalenin
         içinde buldu.
 
         <br><br>
 
-        Elinde yalnızca küçük bir fener vardı.
+        Elinde yalnızca bir fener vardı.
 
         <br><br>
 
-        Koridorun sonunda üç ayrı oda
-        olduğunu fark etti.
+        Önünde açılması gereken
+        üç kapı bulunuyordu.
 
         <br><br>
 
-        Her odanın kapısında
+        Her kapının arkasında
         bir soru vardı.
 
         <br><br>
 
-        Doğru cevapları bulursa
-        kapılar açılacaktı...
+        Doğru cevapları verirsen
+        anahtarları bulabileceksin.
+
+        <br><br>
+
+        Ama dikkat et...
+
+        <br>
+
+        Bu kalede yalnız değilsin.
 
     </div>
 
-    <button class="startButton" onclick="startGame()">
+    <button
+        class="startButton"
+        onclick="startGame()">
+
         OYUNA BAŞLA
+
     </button>
 
 </section>
@@ -876,93 +890,67 @@ button:hover {
 
 <section id="game" class="screen">
 
-    <div class="game">
-
-        <div class="wall"></div>
-
-        <div class="floor"></div>
-
-        <div class="ceilingLight"></div>
-
-        <!-- kanlar -->
-
-        <div class="blood blood1"></div>
-        <div class="blood blood2"></div>
-        <div class="blood blood3"></div>
-        <div class="blood blood4"></div>
-
-        <div class="drop drop1"></div>
-        <div class="drop drop2"></div>
-        <div class="drop drop3"></div>
-        <div class="drop drop4"></div>
-
-
-        <div class="roomNumber" id="roomNumber">
-            ODA 1
-        </div>
-
-
-        <!-- kapı -->
-
-        <div class="door" id="door">
-
-            <div class="doorBlood"></div>
-
-        </div>
-
-
-        <!-- fener ışığı -->
+    <div class="gameArea">
 
         <div class="flashlight"></div>
+
+        <!-- Kanlar -->
+
+        <div class="blood one"></div>
+        <div class="blood two"></div>
+        <div class="blood three"></div>
 
 
         <!-- EFE -->
 
-        <div class="player" id="player">
+        <div
+            class="player"
+            id="player">
 
-            <div class="head">
+            <img src="efe.png">
 
-                <div class="hair"></div>
-
-                <div class="eye left"></div>
-                <div class="eye right"></div>
-
-            </div>
-
-            <div class="shirt"></div>
-
-            <div class="arm left"></div>
-            <div class="arm right"></div>
-
-            <div class="pants"></div>
-
-            <div class="shoe left"></div>
-            <div class="shoe right"></div>
-
-            <div class="handFlashlight"></div>
+            <div class="handLight"></div>
 
         </div>
 
     </div>
 
 
-    <div class="info" id="info">
-        Kapıya yaklaş ve 🔑 tuşuna bas.
+    <div
+        class="info"
+        id="info">
+
+        Kapıya yaklaş...
+
     </div>
 
 
     <div class="controls">
 
-        <button class="control" onclick="move(-8)">
+        <button
+            class="control"
+            onclick="movePlayer(-7)">
+
             ◀
+
         </button>
 
-        <button class="control" onclick="interact()">
+
+        <button
+            class="control"
+            onclick="interact()">
+
             🔑
+
         </button>
 
-        <button class="control" onclick="move(8)">
+
+        <button
+            class="control"
+            onclick="movePlayer(7)">
+
             ▶
+
         </button>
 
     </div>
@@ -974,17 +962,33 @@ button:hover {
      SORU
 ========================= -->
 
-<section id="question" class="screen">
+<section
+    id="question"
+    class="screen">
 
     <div class="questionBox">
 
-        <div class="questionTitle" id="questionTitle">
+        <div
+            class="questionRoom"
+            id="questionRoom">
+
             ODA 1
+
         </div>
 
-        <div class="questionText" id="questionText"></div>
 
-        <div class="answers" id="answers"></div>
+        <div
+            class="questionText"
+            id="questionText">
+
+        </div>
+
+
+        <div
+            class="answers"
+            id="answers">
+
+        </div>
 
     </div>
 
@@ -995,25 +999,28 @@ button:hover {
      ANAHTAR
 ========================= -->
 
-<section id="keyScreen" class="screen">
+<section
+    id="keyScreen"
+    class="screen">
 
-    <div class="key">
+    <div class="bigKey">
         🔑
     </div>
 
-    <p style="font-size:10px;line-height:2;">
+    <h2>
+        ANAHTARI BULDUN
+    </h2>
 
-        ANAHTARI BULDUN.
-
-        <br><br>
-
-        Ama bu evde daha
-        gidilecek yollar var...
-
+    <p>
+        Bir sonraki kapı seni bekliyor...
     </p>
 
-    <button class="continueButton" onclick="nextRoom()">
+    <button
+        class="nextButton"
+        onclick="nextRoom()">
+
         DEVAM ET
+
     </button>
 
 </section>
@@ -1023,31 +1030,25 @@ button:hover {
      SON KAPI
 ========================= -->
 
-<section id="finalDoor" class="screen">
+<section
+    id="finalDoor"
+    class="screen">
 
-    <div class="finalDoorVisual"></div>
+    <div class="finalDoor"></div>
 
-    <div class="finalDoorText">
-
+    <p>
         Son kapıya ulaştın.
-
         <br><br>
-
-        Üç anahtarın birleşti.
-
-        <br>
-
-        Fakat bu kapıyı açacak
-        anahtar çok daha büyük...
-
-    </div>
+        Ama bu kapının anahtarı
+        diğerlerinden farklı...
+    </p>
 
     <button
-        class="continueButton"
-        onclick="findFinalKey()"
-        style="margin-top:25px;"
-    >
-        BÜYÜK ANAHTARI BUL
+        class="nextButton"
+        onclick="findFinalKey()">
+
+        BÜYÜK ANAHTARI BUL 🔑
+
     </button>
 
 </section>
@@ -1057,44 +1058,51 @@ button:hover {
      TEKLİF
 ========================= -->
 
-<section id="proposal" class="screen">
+<section
+    id="proposal"
+    class="screen">
 
-    <div class="proposal">
+    <div class="proposalText">
 
         EFE...
 
         <br><br>
 
-        Bütün odaları geçtin.
+        Üç kapıyı da geçtin.
 
-        <br>
-
-        Bütün soruları cevapladın.
-
-        <br>
+        <br><br>
 
         Bütün anahtarları buldun.
 
         <br><br>
 
         Hayaletlerden bile
-        korkmadın...
+        korkmadın.
 
         <br><br>
 
-        Ama şimdi son bir soru var.
+        Ama şimdi...
 
         <br><br>
 
-        <span class="red">
+        Son bir soru var.
+
+        <br><br>
+
+        <span>
             BENİM SEVGİLİM<br>
             OLUR MUSUN?
         </span>
 
     </div>
 
-    <button class="yesButton" onclick="sayYes()">
-        ❤️ EVET
+
+    <button
+        class="yesButton"
+        onclick="sayYes()">
+
+        ❤️ EVET ❤️
+
     </button>
 
 </section>
@@ -1104,34 +1112,40 @@ button:hover {
      MUTLU SON
 ========================= -->
 
-<section id="happy" class="screen">
+<section
+    id="happy"
+    class="screen">
 
-    <div class="happy">
+    <div class="happyText">
 
         ❤️ GÖREV TAMAMLANDI ❤️
 
         <br><br>
 
-        Efe artık bu evdeki
-        hayaletlerden korkmak
-        zorunda değil.
+        Artık Efe'nin
+        hayaletlerden korkmasına
+        gerek yok.
 
         <br><br>
 
         Çünkü artık yanında
-        onu seven biri var.
+        Cle var.
 
         <br><br>
 
-        Hayaletler bile artık
-        sizi ayıramaz.
+        Bu kalenin en korkunç
+        yerinde bile...
 
         <br><br>
 
         <span style="color:#ff3333;">
-            İYİ Kİ BENİM
-            SEVGİLİMSİN EFE'M. ❤️
+            YALNIZ DEĞİL. ❤️
         </span>
+
+        <br><br>
+
+        İYİ Kİ BENİM
+        SEVGİLİMSİN EFE.
 
     </div>
 
@@ -1140,20 +1154,20 @@ button:hover {
 
 <script>
 
-/* =========================
-   OYUN DEĞİŞKENLERİ
-========================= */
+/* ==================================
+   OYUN
+================================== */
 
 let room = 1;
 
-let playerPosition = 10;
+let playerPosition = 12;
 
 let questionOpen = false;
 
 
-/* =========================
+/* ==================================
    EKRAN DEĞİŞTİR
-========================= */
+================================== */
 
 function showScreen(id) {
 
@@ -1172,60 +1186,44 @@ function showScreen(id) {
 }
 
 
-/* =========================
+/* ==================================
    BAŞLAT
-========================= */
+================================== */
 
 function startGame() {
 
     room = 1;
 
-    playerPosition = 10;
+    playerPosition = 12;
 
-    updateRoom();
+    updatePlayer();
 
     showScreen("game");
 
-    setTimeout(() => {
-
-        createGhost();
-
-    }, 5000);
+    setTimeout(createGhost, 4500);
 
 }
 
 
-/* =========================
-   ODA
-========================= */
+/* ==================================
+   OYUNCU
+================================== */
 
-function updateRoom() {
-
-    playerPosition = 10;
+function updatePlayer() {
 
     document
         .getElementById("player")
         .style.left =
         playerPosition + "%";
 
-    document
-        .getElementById("roomNumber")
-        .innerText =
-        "ODA " + room;
-
-    document
-        .getElementById("info")
-        .innerHTML =
-        "Kapıya yaklaş ve 🔑 tuşuna bas.";
-
 }
 
 
-/* =========================
+/* ==================================
    HAREKET
-========================= */
+================================== */
 
-function move(amount) {
+function movePlayer(amount) {
 
     if (questionOpen)
         return;
@@ -1235,79 +1233,60 @@ function move(amount) {
     if (playerPosition < 5)
         playerPosition = 5;
 
-    if (playerPosition > 88)
-        playerPosition = 88;
+    if (playerPosition > 90)
+        playerPosition = 90;
 
-    document
-        .getElementById("player")
-        .style.left =
-        playerPosition + "%";
-
-    checkDoor();
-
-}
-
-
-/* =========================
-   KAPI KONTROL
-========================= */
-
-function checkDoor() {
+    updatePlayer();
 
     if (
-        playerPosition >= 40 &&
-        playerPosition <= 60
+        playerPosition > 72
     ) {
 
         document
             .getElementById("info")
             .innerHTML =
-            "🔑 Kapının yanındasın.<br>" +
-            "Kapıyı açmak için bas.";
+            "🔑 Kapının yanındasın!<br>🔑 tuşuna bas.";
 
     } else {
 
         document
             .getElementById("info")
             .innerHTML =
-            "Karanlık koridorda ilerliyorsun...";
+            "Karanlıkta ilerliyorsun...";
 
     }
 
 }
 
 
-/* =========================
-   ETKİLEŞİM
-========================= */
+/* ==================================
+   KAPI
+================================== */
 
 function interact() {
 
     if (questionOpen)
         return;
 
-    if (
-        playerPosition >= 40 &&
-        playerPosition <= 60
-    ) {
-
-        openQuestion();
-
-    } else {
+    if (playerPosition < 70) {
 
         document
             .getElementById("info")
             .innerHTML =
-            "Kapıya yaklaşmalısın.";
+            "Önce kapıya yaklaşmalısın.";
+
+        return;
 
     }
+
+    openQuestion();
 
 }
 
 
-/* =========================
+/* ==================================
    SORULAR
-========================= */
+================================== */
 
 const questions = {
 
@@ -1318,7 +1297,7 @@ const questions = {
 
         answers: [
 
-            "A — Mystery Of Love",
+            "A — Mystery of Love",
 
             "B — Friends",
 
@@ -1342,7 +1321,7 @@ const questions = {
 
             "B — Kes, bok",
 
-            "C — Kes, bok, sanane, defol"
+            "C — Kes, bok, sana ne, defol"
 
         ],
 
@@ -1373,9 +1352,9 @@ const questions = {
 };
 
 
-/* =========================
-   SORUYU AÇ
-========================= */
+/* ==================================
+   SORUYU GÖSTER
+================================== */
 
 function openQuestion() {
 
@@ -1384,14 +1363,16 @@ function openQuestion() {
     const q = questions[room];
 
     document
-        .getElementById("questionTitle")
+        .getElementById("questionRoom")
         .innerText =
-        "ODA " + room + " — SORU";
+        "ODA " + room;
+
 
     document
         .getElementById("questionText")
         .innerText =
         q.question;
+
 
     const answers =
         document.getElementById("answers");
@@ -1399,56 +1380,46 @@ function openQuestion() {
     answers.innerHTML = "";
 
 
-    q.answers.forEach((answer, index) => {
+    q.answers.forEach(
+        (answer, index) => {
 
-        const button =
-            document.createElement("button");
+            const button =
+                document.createElement("button");
 
-        button.className = "answer";
+            button.className =
+                "answerButton";
 
-        button.innerText = answer;
-
-
-        button.onclick = function() {
-
-            if (index === q.correct) {
-
-                questionOpen = false;
-
-                showScreen("keyScreen");
-
-            } else {
-
-                /* yanlış cevap korku efekti */
-
-                button.classList.add("wrong");
-
-                button.innerText =
-                    "❌ YANLIŞ...";
-
-                document.body.style.animation =
-                    "shake .3s";
-
-                setTimeout(() => {
-
-                    button.classList.remove("wrong");
-
-                    button.innerText =
-                        answer;
-
-                    document.body.style.animation =
-                        "";
-
-                }, 900);
-
-            }
-
-        };
+            button.innerText =
+                answer;
 
 
-        answers.appendChild(button);
+            button.onclick =
+                function() {
 
-    });
+                    if (
+                        index === q.correct
+                    ) {
+
+                        questionOpen =
+                            false;
+
+                        showScreen(
+                            "keyScreen"
+                        );
+
+                    } else {
+
+                        wrongAnswer(button);
+
+                    }
+
+                };
+
+
+            answers.appendChild(button);
+
+        }
+    );
 
 
     showScreen("question");
@@ -1456,74 +1427,110 @@ function openQuestion() {
 }
 
 
-/* =========================
+/* ==================================
+   YANLIŞ CEVAP
+================================== */
+
+function wrongAnswer(button) {
+
+    button.classList.add("wrong");
+
+    button.innerText =
+        "❌ YANLIŞ...";
+
+    document.body.animate(
+
+        [
+            { transform:"translateX(0)" },
+            { transform:"translateX(-12px)" },
+            { transform:"translateX(12px)" },
+            { transform:"translateX(-8px)" },
+            { transform:"translateX(0)" }
+
+        ],
+
+        {
+            duration: 400
+        }
+
+    );
+
+
+    /* korku sesi için kısa titreşim */
+
+    if (
+        navigator.vibrate
+    ) {
+
+        navigator.vibrate(
+            [100,50,100]
+        );
+
+    }
+
+
+    setTimeout(() => {
+
+        button.classList.remove(
+            "wrong"
+        );
+
+        button.innerText =
+            questions[room]
+            .answers[
+                Array
+                    .from(
+                        document
+                        .querySelectorAll(
+                            ".answerButton"
+                        )
+                    )
+                    .indexOf(button)
+            ];
+
+    }, 900);
+
+}
+
+
+/* ==================================
    SONRAKİ ODA
-========================= */
+================================== */
 
 function nextRoom() {
 
-    if (room < 3) {
+    room++;
 
-        room++;
+    if (room <= 3) {
 
-        showScreen("game");
+        playerPosition = 12;
 
-        updateRoom();
-
-
-        /*
-           Yeni odaya geçerken
-           kısa bir korku anı.
-        */
-
-        setTimeout(() => {
-
-            createGhost();
-
-        }, 1800);
-
-    } else {
-
-        /*
-           Üçüncü anahtar bulundu.
-           Artık son kapıya gidilecek.
-        */
+        updatePlayer();
 
         showScreen("game");
-
-        document
-            .getElementById("roomNumber")
-            .innerText =
-            "SON KORİDOR";
 
         document
             .getElementById("info")
-            .innerHTML =
-            "Üç anahtarı da topladın.<br>" +
-            "Sağ tarafa ilerle.";
+            .innerText =
+            "Yeni oda...";
 
-        playerPosition = 10;
+        setTimeout(
+            createGhost,
+            2500
+        );
 
-        document
-            .getElementById("player")
-            .style.left =
-            playerPosition + "%";
+    } else {
 
-
-        setTimeout(() => {
-
-            createGhost();
-
-        }, 1500);
+        showScreen("finalDoor");
 
     }
 
 }
 
 
-/* =========================
+/* ==================================
    HAYALET
-========================= */
+================================== */
 
 function createGhost() {
 
@@ -1539,86 +1546,61 @@ function createGhost() {
     }
 
 
-    const oldGhost =
-        document.querySelector(".ghost");
+    const existing =
+        document.querySelector(
+            ".ghost"
+        );
 
-    if (oldGhost)
-        oldGhost.remove();
+    if (existing)
+        existing.remove();
 
 
     const ghost =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
-    ghost.className = "ghost";
+    ghost.className =
+        "ghost";
 
 
     document
-        .querySelector("#game .game")
+        .querySelector(".gameArea")
         .appendChild(ghost);
+
+
+    if (
+        navigator.vibrate
+    ) {
+
+        navigator.vibrate(150);
+
+    }
 
 
     setTimeout(() => {
 
-        if (ghost)
-            ghost.remove();
+        ghost.remove();
 
-    }, 2800);
+    }, 3000);
 
 }
 
 
-/* =========================
-   HAREKETİ KONTROL ET
-========================= */
-
-const oldMove = move;
-
-move = function(amount) {
-
-    oldMove(amount);
-
-
-    /*
-       3. odanın sonunda
-       son kapı.
-    */
-
-    if (
-        room === 3 &&
-        playerPosition >= 80
-    ) {
-
-        setTimeout(() => {
-
-            showScreen("finalDoor");
-
-        }, 400);
-
-    }
-
-};
-
-
-/* =========================
+/* ==================================
    BÜYÜK ANAHTAR
-========================= */
+================================== */
 
 function findFinalKey() {
-
-    /*
-       Büyük anahtar bulundu.
-       Son kapının arkasında
-       teklif ekranı.
-    */
 
     showScreen("proposal");
 
 }
 
 
-/* =========================
+/* ==================================
    EVET
-========================= */
+================================== */
 
 function sayYes() {
 
@@ -1629,24 +1611,27 @@ function sayYes() {
 }
 
 
-/* =========================
+/* ==================================
    KALPLER
-========================= */
+================================== */
 
 function createHearts() {
 
     for (
         let i = 0;
-        i < 80;
+        i < 70;
         i++
     ) {
 
         setTimeout(() => {
 
             const heart =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            heart.className = "heart";
+            heart.className =
+                "heart";
 
             heart.innerText =
                 Math.random() > .5
@@ -1657,11 +1642,13 @@ function createHearts() {
                 Math.random() * 100 + "vw";
 
             heart.style.fontSize =
-                (12 + Math.random() * 25)
+                (12 +
+                Math.random() * 25)
                 + "px";
 
             heart.style.animationDuration =
-                (2 + Math.random() * 3)
+                (2 +
+                Math.random() * 3)
                 + "s";
 
             document
@@ -1675,11 +1662,49 @@ function createHearts() {
 
             }, 5000);
 
-        }, i * 55);
+        }, i * 70);
 
     }
 
 }
+
+
+/* ==================================
+   KLAVYE
+================================== */
+
+document.addEventListener(
+    "keydown",
+    function(e) {
+
+        if (
+            e.key === "ArrowLeft"
+        ) {
+
+            movePlayer(-5);
+
+        }
+
+        if (
+            e.key === "ArrowRight"
+        ) {
+
+            movePlayer(5);
+
+        }
+
+        if (
+            e.key === "e" ||
+            e.key === "E" ||
+            e.key === " "
+        ) {
+
+            interact();
+
+        }
+
+    }
+);
 
 </script>
 
