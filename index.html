@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Efe'nin Gizemli Gecesi</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #050505;
+    color: white;
+    font-family: 'Press Start 2P', monospace;
+    overflow: hidden;
+    image-rendering: pixelated;
+}
+
+#game {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background:
+        radial-gradient(circle at center, #181818 0%, #080808 55%, #000 100%);
+}
+
+/* CRT efekti */
+#game::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.025) 0px,
+        rgba(255,255,255,.025) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+    z-index: 100;
+}
+
+.screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 25px;
+}
+
+.active {
+    display: flex;
+}
+
+/* BAŞLANGIÇ */
+
+#start h1 {
+    font-size: clamp(22px, 6vw, 45px);
+    color: #d90000;
+    text-shadow: 4px 4px #300000;
+    line-height: 1.6;
+}
+
+#start p {
+    max-width: 650px;
+    font-size: 11px;
+    line-height: 2;
+    color: #aaa;
+}
+
+button {
+    font-family: 'Press Start 2P', monospace;
+    background: #111;
+    border: 3px solid #eee;
+    color: white;
+    padding: 18px 22px;
+    margin-top: 25px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+button:hover {
+    background: #d00000;
+    border-color: #ff4444;
+}
+
+/* OYUN */
+
+#gameScreen {
+    background: #020202;
+}
+
+.room {
+    width: min(90vw, 700px);
+    height: min(65vh, 480px);
+    position: relative;
+    border: 5px solid #222;
+    background:
+        linear-gradient(#111 0 70%, #181818 70%);
+    overflow: hidden;
+}
+
+/* zemin */
+.room::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30%;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #151515 0px,
+            #151515 45px,
+            #101010 46px,
+            #101010 90px
+        );
+}
+
+/* pencere */
+.window {
+    position: absolute;
+    width: 130px;
+    height: 150px;
+    right: 40px;
+    top: 45px;
+    border: 7px solid #292929;
+    background: #030712;
+}
+
+.moon {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background: #aaa;
+    border-radius: 50%;
+    top: 20px;
+    right: 20px;
+    box-shadow: 0 0 15px #777;
+}
+
+/* kapı */
+.door {
+    position: absolute;
+    left: 45px;
+    top: 80px;
+    width: 90px;
+    height: 190px;
+    background: #211b18;
+    border: 7px solid #302825;
+}
+
+.door::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    top: 100px;
+    width: 10px;
+    height: 10px;
+    background: #d6a23a;
+}
+
+/* karakter */
+
+.player {
+    position: absolute;
+    width: 35px;
+    height: 50px;
+    background: #ddd;
+    bottom: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.player::before {
+    content: "";
+    position: absolute;
+    width: 35px;
+    height: 25px;
+    background: #d8b08c;
+    top: -25px;
+}
+
+.player::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #111;
+    top: -17px;
+    left: 8px;
+    box-shadow: 14px 0 #111;
+}
+
+/* fener ışığı */
+
+.flashlight {
+    position: absolute;
+    width: 400px;
+    height: 250px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -45%);
+    background: radial-gradient(
+        ellipse,
+        rgba(255,255,220,.13) 0%,
+        rgba(255,255,220,.05) 35%,
+        transparent 70%
+    );
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* mesaj */
+
+.message {
+    position: absolute;
+    left: 50%;
+    top: 15px;
+    transform: translateX(-50%);
+    width: 90%;
+    color: #bbb;
+    font-size: 9px;
+    line-height: 1.8;
+    z-index: 20;
+}
+
+/* korku */
+
+#scare {
+    background: #000;
+    z-index: 50;
+}
+
+.face {
+    width: 180px;
+    height: 180px;
+    background: #ddd;
+    position: relative;
+    box-shadow: 0 0 40px #fff;
+}
+
+.eye {
+    position: absolute;
+    width: 35px;
+    height: 50px;
+    background: #000;
+    top: 45px;
+}
+
+.eye.left {
+    left: 35px;
+}
+
+.eye.right {
+    right: 35px;
+}
+
+.mouth {
+    position: absolute;
+    width: 100px;
+    height: 25px;
+    background: #000;
+    bottom: 35px;
+    left: 40px;
+}
+
+/* FINAL */
+
+#final {
+    background: radial-gradient(circle, #240000, #030000 65%, #000);
+}
+
+.finalText {
+    font-size: clamp(15px, 4vw, 28px);
+    line-height: 2;
+    color: #fff;
+    text-shadow: 3px 3px #800000;
+}
+
+.heart {
+    position: fixed;
+    font-size: 20px;
+    animation: fall 3s linear forwards;
+    z-index: 200;
+}
+
+@keyframes fall {
+    from {
+        transform: translateY(-50px) rotate(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+#yes {
+    background: #8b0000;
+    border-color: #ff5555;
+}
+
+#yes:hover {
+    background: #ff0000;
+}
+
+/* mobil kontroller */
+
+.controls {
+    margin-top: 15px;
+    display: flex;
+    gap: 8px;
+    z-index: 30;
+}
+
+.controls button {
+    margin: 0;
+    padding: 12px;
+    font-size: 10px;
+}
+
+#key {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: gold;
+    left: 75%;
+    bottom: 38%;
+    box-shadow: 0 0 15px gold;
+    z-index: 15;
+}
+
+.hidden {
+    display: none !important;
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+    <!-- BAŞLANGIÇ -->
+
+    <section id="start" class="screen active">
+
+        <h1>EFE</h1>
+
+        <p>
+            Gece çok sessizdi...<br><br>
+            Telefonuna garip bir mesaj geldi.
+            <br><br>
+            "Bu gece yalnız değilsin."
+            <br><br>
+            Bir şey seni bekliyor.
+        </p>
+
+        <button onclick="startGame()">OYUNA BAŞLA</button>
+
+    </section>
+
+
+    <!-- OYUN -->
+
+    <section id="gameScreen" class="screen">
+
+        <div class="message" id="message">
+            Fenerini kullan.<br>
+            Bu evden çıkmak için anahtarı bul.
+        </div>
+
+        <div class="room">
+
+            <div class="window">
+                <div class="moon"></div>
+            </div>
+
+            <div class="door"></div>
+
+            <div class="flashlight"></div>
+
+            <div id="key"></div>
+
+            <div class="player" id="player"></div>
+
+        </div>
+
+        <div class="controls">
+
+            <button onclick="move(-25)">◀</button>
+            <button onclick="move(25)">▶</button>
+            <button onclick="interact()">ETKİLEŞ</button>
+
+        </div>
+
+    </section>
+
+
+    <!-- KORKU -->
+
+    <section id="scare" class="screen">
+
+        <div class="face">
+
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="mouth"></div>
+
+        </div>
+
+        <p style="margin-top:30px;color:#aaa;font-size:10px;">
+            Arkana bakma...
+        </p>
+
+    </section>
+
+
+    <!-- FINAL -->
+
+    <section id="final" class="screen">
+
+        <div class="finalText">
+
+            EFE...<br><br>
+
+            Bütün bu yolu geldin.<br><br>
+
+            Artık kaçabileceğin<br>
+            hiçbir yer yok. 👀<br><br>
+
+            Ama merak etme...<br>
+            Son görev sandığın kadar korkunç değil.
+            <br><br>
+
+            <span style="color:#ff3333;">
+                SEVGİLİM OLUR MUSUN?
+            </span>
+
+        </div>
+
+        <button id="yes" onclick="accept()">
+            ❤️ EVET
+        </button>
+
+    </section>
+
+
+</div>
+
+
+<script>
+
+let playerPosition = 50;
+let hasKey = false;
+let scareTriggered = false;
+
+const player = document.getElementById("player");
+const key = document.getElementById("key");
+const message = document.getElementById("message");
+
+function show(id) {
+
+    document.querySelectorAll(".screen")
+        .forEach(x => x.classList.remove("active"));
+
+    document.getElementById(id)
+        .classList.add("active");
+}
+
+function startGame() {
+
+    show("gameScreen");
+
+    setTimeout(() => {
+
+        message.innerHTML =
+        "Bir şey hareket etti...<br>Fenerini açık tut.";
+
+    }, 2500);
+
+    setTimeout(() => {
+
+        if (!scareTriggered) {
+
+            scareTriggered = true;
+
+            show("scare");
+
+            setTimeout(() => {
+                show("gameScreen");
+            }, 1200);
+
+        }
+
+    }, 5500);
+}
+
+
+function move(amount) {
+
+    playerPosition += amount / 10;
+
+    if (playerPosition < 8)
+        playerPosition = 8;
+
+    if (playerPosition > 92)
+        playerPosition = 92;
+
+    player.style.left = playerPosition + "%";
+
+    checkKey();
+}
+
+
+function checkKey() {
+
+    if (
+        playerPosition > 68 &&
+        playerPosition < 84 &&
+        !hasKey
+    ) {
+
+        message.innerHTML =
+        "✨ Bir anahtar buldun!<br>Şimdi kapıya git.";
+
+    }
+
+}
+
+
+function interact() {
+
+    if (
+        playerPosition > 68 &&
+        playerPosition < 84 &&
+        !hasKey
+    ) {
+
+        hasKey = true;
+
+        key.classList.add("hidden");
+
+        message.innerHTML =
+        "ANAHTARI ALDIN.<br>Kapıya git...";
+
+        return;
+    }
+
+
+    if (
+        playerPosition < 20 &&
+        hasKey
+    ) {
+
+        message.innerHTML =
+        "Kapı açılıyor...";
+
+        setTimeout(() => {
+            show("final");
+        }, 1500);
+
+        return;
+    }
+
+
+    if (!hasKey) {
+
+        message.innerHTML =
+        "Kapı kilitli.<br>Önce anahtarı bulmalısın.";
+
+    }
+
+}
+
+
+function accept() {
+
+    for (let i = 0; i < 50; i++) {
+
+        setTimeout(() => {
+
+            const heart = document.createElement("div");
+
+            heart.className = "heart";
+
+            heart.innerHTML =
+                Math.random() > .5 ? "❤️" : "♥";
+
+            heart.style.left =
+                Math.random() * 100 + "vw";
+
+            heart.style.top = "-30px";
+
+            heart.style.fontSize =
+                (15 + Math.random() * 30) + "px";
+
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+
+        }, i * 80);
+
+    }
+
+    document.querySelector("#final .finalText")
+        .innerHTML = `
+        <span style="color:#ff3333;font-size:1.3em;">
+        GÖREV TAMAMLANDI ❤️
+        </span>
+        <br><br>
+        Efe artık yalnız değil. 🥹
+        <br><br>
+        Çünkü artık benim sevgilim.
+        `;
+
+    document.getElementById("yes")
+        .style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
